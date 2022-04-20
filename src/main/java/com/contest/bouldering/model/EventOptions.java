@@ -14,6 +14,6 @@ public class EventOptions {
     private Integer boulders = 30;
 
     @Builder.Default
-    private Map<String, String> metadata = new HashMap<>();
+    private Map<String, Object> metadata = new HashMap<>();
 
 }

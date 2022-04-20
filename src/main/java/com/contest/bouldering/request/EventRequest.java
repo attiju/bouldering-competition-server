@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Data
@@ -16,6 +15,6 @@ public class EventRequest {
 
     private Integer boulders;
 
-    private Map<String, String> metadata;
+    private Map<String, Object> metadata;
 
 }
