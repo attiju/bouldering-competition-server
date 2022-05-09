@@ -1,16 +1,17 @@
 package com.contest.bouldering.request;
 
+import com.contest.bouldering.model.ClimberBoulder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class BouldersRequest {
 
-    private Set<Integer> boulders;
+    private List<ClimberBoulder> boulders;
 
 }

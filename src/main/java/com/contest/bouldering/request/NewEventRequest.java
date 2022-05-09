@@ -1,20 +1,21 @@
 package com.contest.bouldering.request;
 
+import com.contest.bouldering.model.EventOptionBoulder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Map;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventRequest {
+public class NewEventRequest {
 
     private String name;
 
-    private Integer boulders;
+    private String color;
 
-    private Map<String, Object> metadata;
+    private List<EventOptionBoulder> boulders;
 
 }

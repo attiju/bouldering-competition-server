@@ -1,8 +1,8 @@
 package com.contest.bouldering.controller;
 
 import com.contest.bouldering.model.Event;
-import com.contest.bouldering.request.EventRequest;
 import com.contest.bouldering.request.EventUpdateRequest;
+import com.contest.bouldering.request.NewEventRequest;
 import com.contest.bouldering.response.EventDetails;
 import com.contest.bouldering.response.Leaderboards;
 import com.contest.bouldering.service.EventService;
@@ -27,8 +27,13 @@ public class EventController {
     }
 
     @PostMapping
-    public Event postCreateEvent(@RequestBody EventRequest request) {
+    public Event postCreateEvent(@RequestBody NewEventRequest request) {
         return this.eventService.createEvent(request);
+    }
+
+    @DeleteMapping("/{eventId}")
+    public void deleteEvent(@PathVariable String eventId) {
+        this.eventService.removeEvent(eventId);
     }
 
     @GetMapping("/{eventId}")
@@ -39,11 +44,6 @@ public class EventController {
     @PutMapping("/{eventId}")
     public EventDetails putUpdateEvent(@PathVariable String eventId, @RequestBody EventUpdateRequest request) {
         return this.eventService.updateEvent(eventId, request);
-    }
-
-    @DeleteMapping("/{eventId}")
-    public void deleteEvent(@PathVariable String eventId) {
-        this.eventService.removeEvent(eventId);
     }
 
     @GetMapping("/{eventId}/leaderboards")

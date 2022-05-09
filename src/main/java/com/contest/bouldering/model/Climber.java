@@ -5,8 +5,8 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder(toBuilder = true)
@@ -14,7 +14,7 @@ import java.util.Set;
 public class Climber {
 
     @Builder.Default
-    Set<Integer> boulders = new HashSet<>();
+    List<ClimberBoulder> boulders = new ArrayList<>();
     @Id
     private String id;
     private String eventId;

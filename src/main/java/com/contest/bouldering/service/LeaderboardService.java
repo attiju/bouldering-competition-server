@@ -1,6 +1,7 @@
 package com.contest.bouldering.service;
 
 import com.contest.bouldering.model.Climber;
+import com.contest.bouldering.model.EventOptionBoulder;
 import com.contest.bouldering.model.Gender;
 import com.contest.bouldering.response.EventDetails;
 import com.contest.bouldering.response.Leaderboard;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
@@ -32,18 +32,10 @@ public class LeaderboardService {
     }
 
     private Leaderboard generateLeaderboard(EventDetails event, Gender gender) {
+        List<EventOptionBoulder> boulderOptions = event.getOptions().getBoulders();
+
         List<Climber> climbers = event.getClimbers().stream()
                 .filter(climber -> climber.getGender().equals(gender))
-                .toList();
-
-        List<Double> bouldersScores = IntStream.range(0, event.getOptions().getBoulders())
-                .boxed()
-                .map(boulder -> climbers
-                        .stream()
-                        .filter(user -> user.getBoulders().contains(boulder))
-                        .count()
-                )
-                .map(count -> count == 0 ? 1000.0 : 1000.0 / count)
                 .toList();
 
         List<RankedClimber> rankedClimbers = climbers.stream()
@@ -51,7 +43,7 @@ public class LeaderboardService {
                         .id(climber.getId())
                         .firstname(climber.getFirstname())
                         .lastname(climber.getLastname())
-                        .score(climber.getBoulders().stream().map(bouldersScores::get).reduce(0.0, Double::sum))
+                        .score(this.computeClimberScore(climber, climbers, boulderOptions))
                         .build())
                 .sorted(Comparator.comparing(RankedClimber::getScore).reversed())
                 .toList();
@@ -59,5 +51,24 @@ public class LeaderboardService {
         return Leaderboard.builder()
                 .climbers(rankedClimbers)
                 .build();
+    }
+
+    private Double computeClimberScore(Climber climber, List<Climber> climbers, List<EventOptionBoulder> boulderOptions) {
+        return IntStream.range(0, boulderOptions.size())
+                .boxed()
+                .map(boulderIndex -> {
+                    double score = 0;
+
+                    if (climber.getBoulders().get(boulderIndex).getValidateTop()) {
+                        score += (1000. / climbers.stream().filter(c -> c.getBoulders().get(boulderIndex).getValidateTop()).count());
+                    }
+
+                    if (boulderOptions.get(boulderIndex).isHasZone() && climber.getBoulders().get(boulderIndex).getValidateZone()) {
+                        score += (1000. / climbers.stream().filter(c -> c.getBoulders().get(boulderIndex).getValidateZone()).count());
+                    }
+
+                    return score;
+                })
+                .reduce(0., Double::sum);
     }
 }

@@ -15,6 +15,8 @@ public class EventDetails {
 
     private String name;
 
+    private String color;
+
     private Boolean active;
 
     private EventOptions options;

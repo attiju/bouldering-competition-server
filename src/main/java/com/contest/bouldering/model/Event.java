@@ -16,7 +16,10 @@ public class Event {
     private String name;
 
     @Builder.Default
-    private Boolean active = false;
+    private Boolean active = true;
+
+    @Builder.Default
+    private String color = "#000000";
 
     @Builder.Default
     private EventOptions options = EventOptions.builder().build();

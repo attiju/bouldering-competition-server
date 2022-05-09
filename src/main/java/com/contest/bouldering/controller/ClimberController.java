@@ -19,13 +19,14 @@ public class ClimberController {
         return this.climberService.registerClimber(eventId, request);
     }
 
+    @DeleteMapping("/climbers/{climberId}")
+    public void deleteRemoveClimber(@PathVariable String eventId, @PathVariable String climberId) {
+        this.climberService.removeClimber(eventId, climberId);
+    }
+
     @PutMapping("/climbers/{climberId}")
     public Climber putUpdateClimber(@PathVariable String eventId, @PathVariable String climberId, @RequestBody BouldersRequest request) {
         return this.climberService.updateClimberBoulders(eventId, climberId, request);
     }
 
-    @DeleteMapping("/climbers/{climberId}")
-    public void deleteRemoveClimber(@PathVariable String eventId, @PathVariable String climberId) {
-        this.climberService.removeClimber(eventId, climberId);
-    }
 }
