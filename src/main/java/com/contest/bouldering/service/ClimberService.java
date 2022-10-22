@@ -63,4 +63,8 @@ public class ClimberService {
 
         return this.climberRepository.save(climber.toBuilder().boulders(request.getBoulders()).build());
     }
+
+    public void removeClimbers(String eventId) {
+        this.climberRepository.deleteAllByEventId(eventId);
+    }
 }

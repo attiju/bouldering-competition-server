@@ -19,6 +19,11 @@ public class ClimberController {
         return this.climberService.registerClimber(eventId, request);
     }
 
+    @DeleteMapping("/climbers")
+    public void deleteRemoveAllClimbers(@PathVariable String eventId) {
+        this.climberService.removeClimbers(eventId);
+    }
+
     @DeleteMapping("/climbers/{climberId}")
     public void deleteRemoveClimber(@PathVariable String eventId, @PathVariable String climberId) {
         this.climberService.removeClimber(eventId, climberId);
