@@ -21,5 +21,6 @@ public class Climber {
     private String firstname;
     private String lastname;
     private Gender gender;
+    private Boolean paid;
 
 }

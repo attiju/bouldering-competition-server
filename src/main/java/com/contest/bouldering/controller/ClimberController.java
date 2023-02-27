@@ -3,6 +3,7 @@ package com.contest.bouldering.controller;
 import com.contest.bouldering.model.Climber;
 import com.contest.bouldering.request.BouldersRequest;
 import com.contest.bouldering.request.ClimberRequest;
+import com.contest.bouldering.request.ClimberUpdateRequest;
 import com.contest.bouldering.service.ClimberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,11 @@ public class ClimberController {
     @PostMapping("/climbers")
     public Climber postRegisterClimbers(@PathVariable String eventId, @RequestBody ClimberRequest request) {
         return this.climberService.registerClimber(eventId, request);
+    }
+
+    @PutMapping("/climbers/{climberId}/information")
+    public Climber setClimberPaymentStatus(@PathVariable String eventId, @PathVariable String climberId, @RequestBody ClimberUpdateRequest request) {
+        return this.climberService.updateClimberInformation(eventId, climberId, request);
     }
 
     @DeleteMapping("/climbers")

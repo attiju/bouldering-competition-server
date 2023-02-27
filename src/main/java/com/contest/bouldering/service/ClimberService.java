@@ -8,10 +8,12 @@ import com.contest.bouldering.model.ClimberBoulder;
 import com.contest.bouldering.repository.ClimberRepository;
 import com.contest.bouldering.request.BouldersRequest;
 import com.contest.bouldering.request.ClimberRequest;
+import com.contest.bouldering.request.ClimberUpdateRequest;
 import com.contest.bouldering.response.EventDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -66,5 +68,21 @@ public class ClimberService {
 
     public void removeClimbers(String eventId) {
         this.climberRepository.deleteAllByEventId(eventId);
+    }
+
+    public Climber updateClimberInformation(String eventId, String climberId, ClimberUpdateRequest request) {
+        EventDetails event = this.eventService.getEventDetails(eventId);
+
+        Climber climber = event.getClimbers()
+                .stream()
+                .filter(c -> c.getId().equals(climberId))
+                .findFirst()
+                .orElseThrow(NotFoundError::new);
+
+        var climberBuilder = climber.toBuilder();
+        Optional.ofNullable(request.getGender()).ifPresent(climberBuilder::gender);
+        Optional.ofNullable(request.getPaid()).ifPresent(climberBuilder::paid);
+
+        return this.climberRepository.save(climberBuilder.build());
     }
 }
