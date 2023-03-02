@@ -18,6 +18,8 @@ public class EventDetails {
     private String color;
 
     private Boolean active;
+    
+    private Boolean verifyPayment;
 
     private EventOptions options;
 
