@@ -66,6 +66,7 @@ public class EventService {
                 .color(event.getColor())
                 .options(event.getOptions())
                 .active(event.getActive())
+                .verifyPayment(event.getVerifyPayment())
                 .climbers(this.climberRepository.findAllByEventId(eventId))
                 .build();
     }
