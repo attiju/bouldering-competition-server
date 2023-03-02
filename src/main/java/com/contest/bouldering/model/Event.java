@@ -14,6 +14,9 @@ public class Event {
     private String id;
 
     private String name;
+    
+    @Builder.Default
+    private Boolean verifyPayment = false;
 
     @Builder.Default
     private Boolean active = true;
