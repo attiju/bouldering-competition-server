@@ -26,6 +26,11 @@ public class ClimberService {
 
     private final ClimberRepository climberRepository;
 
+    public Climber findClimberById(String climberId) {
+        return this.climberRepository.findById(climberId)
+                .orElseThrow(() -> new NotFoundError());
+    }
+
     public Climber registerClimber(String eventId, ClimberRequest request) {
         log.info("[Start] climber registration for event {}", eventId);
 

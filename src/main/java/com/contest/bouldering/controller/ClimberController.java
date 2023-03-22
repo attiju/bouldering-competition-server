@@ -15,6 +15,11 @@ public class ClimberController {
 
     private final ClimberService climberService;
 
+    @GetMapping("/climbers/{climberId}")
+    public Climber getClimberById(@PathVariable String eventId, @PathVariable String climberId) {
+        return this.climberService.findClimberById(climberId);
+    }
+
     @PostMapping("/climbers")
     public Climber postRegisterClimbers(@PathVariable String eventId, @RequestBody ClimberRequest request) {
         return this.climberService.registerClimber(eventId, request);
