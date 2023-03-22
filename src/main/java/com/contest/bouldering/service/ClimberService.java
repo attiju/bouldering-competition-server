@@ -11,11 +11,13 @@ import com.contest.bouldering.request.ClimberRequest;
 import com.contest.bouldering.request.ClimberUpdateRequest;
 import com.contest.bouldering.response.EventDetails;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ClimberService {
@@ -25,6 +27,8 @@ public class ClimberService {
     private final ClimberRepository climberRepository;
 
     public Climber registerClimber(String eventId, ClimberRequest request) {
+        log.info("[Start] climber registration for event {}", eventId);
+
         EventDetails event = this.eventService.getEventDetails(eventId);
 
         Climber climber = Climber.builder()
@@ -35,15 +39,22 @@ public class ClimberService {
                 .boulders(event.getOptions().getBoulders().stream().map(boulderOption -> ClimberBoulder.builder().build()).collect(Collectors.toList()))
                 .build();
 
-        if (event.getClimbers().stream().anyMatch(c -> c.getFirstname().equals(climber.getFirstname()) && c.getLastname().equals(climber.getLastname()))) {
+        if (event.getClimbers()
+                .stream()
+                .anyMatch(c -> c.getFirstname().equals(climber.getFirstname()) && c.getLastname().equals(climber.getLastname()))) {
             throw new ConflictError();
         }
 
-        return this.climberRepository.save(climber);
+        Climber persistedClimber = this.climberRepository.save(climber);
+
+        log.info("[End] climber registration for event {}", eventId);
+        return persistedClimber;
     }
 
     public void removeClimber(String eventId, String climberId) {
+        log.info("[Start] climber {} un-registration for event {}", climberId, eventId);
         this.climberRepository.deleteById(climberId);
+        log.info("[End] climber {} un-registration for event {}", climberId, eventId);
     }
 
     public Climber updateClimberBoulders(String eventId, String climberId, BouldersRequest request) {

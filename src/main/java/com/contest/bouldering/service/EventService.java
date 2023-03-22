@@ -12,12 +12,14 @@ import com.contest.bouldering.request.EventUpdateRequest;
 import com.contest.bouldering.request.NewEventRequest;
 import com.contest.bouldering.response.EventDetails;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EventService {
@@ -31,6 +33,7 @@ public class EventService {
     }
 
     public Event createEvent(NewEventRequest request) {
+        log.info("[Start] create event");
         Event event = Event.builder()
                 .name(request.getName().toLowerCase().trim())
                 .color(request.getColor())
@@ -44,7 +47,10 @@ public class EventService {
             throw new ConflictError();
         }
 
-        return this.eventRepository.save(event);
+        Event persistedEvent = this.eventRepository.save(event);
+
+        log.info("[End] create event {}", persistedEvent.getId());
+        return persistedEvent;
     }
 
     public void removeEvent(String eventId) {
@@ -57,18 +63,23 @@ public class EventService {
     }
 
     public EventDetails getEventDetails(String eventId) {
-        Event event = this.eventRepository.findById(eventId)
-                .orElseThrow(NotFoundError::new);
+        log.info("[Start] get event {} details", eventId);
+        log.info("Fetching event");
+        Event event = this.eventRepository.findById(eventId).orElseThrow(NotFoundError::new);
+        log.info("Fetching climbers");
+        List<Climber> climbers = this.climberRepository.findAllByEventId(eventId);
 
-        return EventDetails.builder()
+        var details = EventDetails.builder()
                 .id(eventId)
                 .name(event.getName())
                 .color(event.getColor())
                 .options(event.getOptions())
                 .active(event.getActive())
                 .verifyPayment(event.getVerifyPayment())
-                .climbers(this.climberRepository.findAllByEventId(eventId))
+                .climbers(climbers)
                 .build();
+        log.info("[End] get event {} details", eventId);
+        return details;
     }
 
     public EventDetails updateEvent(String eventId, EventUpdateRequest request) {

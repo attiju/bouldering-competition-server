@@ -8,6 +8,5 @@ import java.util.List;
 public interface ClimberRepository extends MongoRepository<Climber, String> {
 
     List<Climber> findAllByEventId(String eventId);
-
     void deleteAllByEventId(String eventId);
 }
